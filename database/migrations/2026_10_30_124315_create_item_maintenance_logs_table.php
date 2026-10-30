@@ -6,32 +6,19 @@ use Illuminate\Support\Facades\Schema;
 
 return new class extends Migration
 {
-    /**
-     * Run the migrations.
-     */
     public function up(): void
     {
         Schema::create('item_maintenance_logs', function (Blueprint $table) {
             $table->id();
+            $table->foreignId('inventory_item_id')->constrained('inventory_items');
+            $table->text('issue_description');
+            $table->enum('status', ['in_repair', 'fixed'])->default('in_repair');
             $table->timestamps();
         });
     }
 
-    /**
-     * Reverse the migrations.
-     */
     public function down(): void
     {
         Schema::dropIfExists('item_maintenance_logs');
     }
 };
-public function up(): void
-{
-    Schema::create('item_maintenance_logs', function (Blueprint $table) {
-        $table->id();
-        $table->foreignId('inventory_item_id')->constrained('inventory_items');
-        $table->text('issue_description');
-        $table->enum('status', ['in_repair', 'fixed'])->default('in_repair');
-        $table->timestamps();
-    });
-}
