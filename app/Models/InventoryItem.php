@@ -12,4 +12,15 @@ class InventoryItem extends Model
         'condition', 
         'is_available'
     ];
+    
+    public function category()
+    {
+        return $this->belongsTo(ItemCategory::class);
+    }
+
+    
+    public function maintenanceLogs()
+    {
+        return $this->hasMany(ItemMaintenanceLog::class, 'inventory_item_id');
+    }
 }

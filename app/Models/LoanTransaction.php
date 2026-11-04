@@ -15,4 +15,18 @@ class LoanTransaction extends Model
         'return_date', 
         'status'
     ];
+    public function request()
+    {
+        return $this->belongsTo(BorrowRequest::class, 'borrow_request_id');
+    }
+
+    public function user()
+    {
+        return $this->belongsTo(User::class);
+    }
+
+    public function item()
+    {
+        return $this->belongsTo(InventoryItem::class, 'inventory_item_id');
+    }
 }
