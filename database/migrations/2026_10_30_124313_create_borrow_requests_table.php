@@ -25,3 +25,14 @@ return new class extends Migration
         Schema::dropIfExists('borrow_requests');
     }
 };
+public function up(): void
+{
+    Schema::create('borrow_requests', function (Blueprint $table) {
+        $table->id();
+        $table->foreignId('user_id')->constrained('users'); // Student ID
+        $table->foreignId('inventory_item_id')->constrained('inventory_items');
+        $table->enum('status', ['pending', 'approved', 'rejected', 'cancelled'])->default('pending');
+        $table->text('rejection_reason')->nullable();
+        $table->timestamps();
+    });
+}
