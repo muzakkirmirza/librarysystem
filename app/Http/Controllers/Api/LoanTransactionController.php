@@ -4,18 +4,17 @@ namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
 use App\Models\LoanTransaction;
+use App\Models\InventoryItem;
+use App\Http\Resources\LoanTransactionResource;
 use Illuminate\Http\Request;
 
 class LoanTransactionController extends Controller
 {
-    // 1. Saari Loan Transactions dekhna (GET)
     public function index()
     {
-        $transactions = LoanTransaction::with(['user', 'item', 'request'])->get();
-        return response()->json($transactions, 200);
+        return LoanTransactionResource::collection(LoanTransaction::with(['user', 'item', 'request'])->get());
     }
 
-    // 2. Nayi Transaction / Item Issue karna (POST)
     public function store(Request $request)
     {
         $validated = $request->validate([
@@ -29,10 +28,14 @@ class LoanTransactionController extends Controller
         ]);
 
         $transaction = LoanTransaction::create($validated);
-        return response()->json($transaction->load(['user', 'item', 'request']), 201);
+
+        if ($transaction->status === 'issued') {
+            InventoryItem::where('id', $transaction->inventory_item_id)->update(['is_available' => false]);
+        }
+
+        return new LoanTransactionResource($transaction->load(['user', 'item', 'request']));
     }
 
-    // 3. Specific Transaction dekhna (GET)
     public function show(string $id)
     {
         $transaction = LoanTransaction::with(['user', 'item', 'request'])->find($id);
@@ -41,10 +44,9 @@ class LoanTransactionController extends Controller
             return response()->json(['message' => 'Loan transaction not found'], 404);
         }
 
-        return response()->json($transaction, 200);
+        return new LoanTransactionResource($transaction);
     }
 
-    // 4. Item Return status update karna (PUT/PATCH)
     public function update(Request $request, string $id)
     {
         $transaction = LoanTransaction::find($id);
@@ -61,10 +63,16 @@ class LoanTransactionController extends Controller
         ]);
 
         $transaction->update($validated);
-        return response()->json($transaction->load(['user', 'item', 'request']), 200);
+
+        if ($transaction->status === 'returned') {
+            InventoryItem::where('id', $transaction->inventory_item_id)->update(['is_available' => true]);
+        } elseif ($transaction->status === 'issued' || $transaction->status === 'overdue') {
+            InventoryItem::where('id', $transaction->inventory_item_id)->update(['is_available' => false]);
+        }
+
+        return new LoanTransactionResource($transaction->load(['user', 'item', 'request']));
     }
 
-    // 5. Transaction Delete karna (DELETE)
     public function destroy(string $id)
     {
         $transaction = LoanTransaction::find($id);

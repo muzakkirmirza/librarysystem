@@ -4,18 +4,16 @@ namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
 use App\Models\ItemMaintenanceLog;
+use App\Http\Resources\ItemMaintenanceLogResource;
 use Illuminate\Http\Request;
 
 class ItemMaintenanceLogController extends Controller
 {
-    // 1. Saare Maintenance Logs dekhna (Item ki detail ke sath) (GET)
     public function index()
     {
-        $logs = ItemMaintenanceLog::with('item')->get();
-        return response()->json($logs, 200);
+        return ItemMaintenanceLogResource::collection(ItemMaintenanceLog::with('item')->get());
     }
 
-    // 2. Naya Maintenance Record add karna (POST)
     public function store(Request $request)
     {
         $validated = $request->validate([
@@ -25,10 +23,9 @@ class ItemMaintenanceLogController extends Controller
         ]);
 
         $log = ItemMaintenanceLog::create($validated);
-        return response()->json($log->load('item'), 201);
+        return new ItemMaintenanceLogResource($log->load('item'));
     }
 
-    // 3. Specific Log dekhna (GET)
     public function show(string $id)
     {
         $log = ItemMaintenanceLog::with('item')->find($id);
@@ -37,10 +34,9 @@ class ItemMaintenanceLogController extends Controller
             return response()->json(['message' => 'Maintenance log not found'], 404);
         }
 
-        return response()->json($log, 200);
+        return new ItemMaintenanceLogResource($log);
     }
 
-    // 4. Maintenance status update karna (PUT/PATCH)
     public function update(Request $request, string $id)
     {
         $log = ItemMaintenanceLog::find($id);
@@ -56,10 +52,9 @@ class ItemMaintenanceLogController extends Controller
         ]);
 
         $log->update($validated);
-        return response()->json($log->load('item'), 200);
+        return new ItemMaintenanceLogResource($log->load('item'));
     }
 
-    // 5. Maintenance Log delete karna (DELETE)
     public function destroy(string $id)
     {
         $log = ItemMaintenanceLog::find($id);

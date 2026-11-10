@@ -4,18 +4,16 @@ namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
 use App\Models\BorrowRequest;
+use App\Http\Resources\BorrowRequestResource;
 use Illuminate\Http\Request;
 
 class BorrowRequestController extends Controller
 {
-    // 1. Saari Borrow Requests dekhna (User aur Item ki details ke sath) (GET)
     public function index()
     {
-        $requests = BorrowRequest::with(['user', 'item'])->get();
-        return response()->json($requests, 200);
+        return BorrowRequestResource::collection(BorrowRequest::with(['user', 'item'])->get());
     }
 
-    // 2. Student ki nayi request create karna (POST)
     public function store(Request $request)
     {
         $validated = $request->validate([
@@ -26,10 +24,9 @@ class BorrowRequestController extends Controller
         ]);
 
         $borrowRequest = BorrowRequest::create($validated);
-        return response()->json($borrowRequest->load(['user', 'item']), 201);
+        return new BorrowRequestResource($borrowRequest->load(['user', 'item']));
     }
 
-    // 3. Kisi specific request ki detail dekhna (GET)
     public function show(string $id)
     {
         $borrowRequest = BorrowRequest::with(['user', 'item'])->find($id);
@@ -38,10 +35,9 @@ class BorrowRequestController extends Controller
             return response()->json(['message' => 'Borrow request not found'], 404);
         }
 
-        return response()->json($borrowRequest, 200);
+        return new BorrowRequestResource($borrowRequest);
     }
 
-    // 4. Request Status Update karna (Approve/Reject karna) (PUT/PATCH)
     public function update(Request $request, string $id)
     {
         $borrowRequest = BorrowRequest::find($id);
@@ -56,10 +52,9 @@ class BorrowRequestController extends Controller
         ]);
 
         $borrowRequest->update($validated);
-        return response()->json($borrowRequest->load(['user', 'item']), 200);
+        return new BorrowRequestResource($borrowRequest->load(['user', 'item']));
     }
 
-    // 5. Request Delete karna (DELETE)
     public function destroy(string $id)
     {
         $borrowRequest = BorrowRequest::find($id);
