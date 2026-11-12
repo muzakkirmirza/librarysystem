@@ -3,13 +3,13 @@
 @section('content')
 <div class="bg-white p-6 rounded-lg shadow-md">
     <h2 class="text-3xl font-bold mb-4 text-gray-800">Welcome to Campus Library System</h2>
-    <p class="text-gray-600 mb-6">Aap system mein successfully login ho chuke hain!</p>
+    <p class="text-gray-600 mb-6"></p>
 
     <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
         <div class="bg-indigo-50 p-6 rounded-lg border border-indigo-100 shadow-sm">
             <h3 class="text-xl font-bold text-indigo-700 mb-2">Inventory Items</h3>
             <p class="text-gray-600 text-sm mb-4">View and manage library assets and items.</p>
-            <a href="#" class="inline-block bg-indigo-600 text-white text-sm px-4 py-2 rounded hover:bg-indigo-700">Manage Items</a>
+            <a href="/inventory" class="inline-block bg-indigo-600 text-white text-sm px-4 py-2 rounded hover:bg-indigo-700">Manage Items</a>
         </div>
 
         <div class="bg-green-50 p-6 rounded-lg border border-green-100 shadow-sm">

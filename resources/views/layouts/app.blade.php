@@ -29,6 +29,7 @@
         if (token) {
             document.getElementById('nav-links').innerHTML = `
                 <a href="/dashboard" class="hover:underline">Dashboard</a>
+                <a href="/inventory" class="hover:underline">Inventory</a>
                 <button onclick="logout()" class="bg-red-500 hover:bg-red-600 px-3 py-1 rounded text-white">Logout</button>
             `;
         }
