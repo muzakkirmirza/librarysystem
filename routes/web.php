@@ -20,3 +20,6 @@ Route::get('/dashboard', function () {
 Route::get('/inventory', function () {
     return view('inventory.index');
 });
+Route::get('/borrow-requests', function () {
+    return view('borrow.index');
+});

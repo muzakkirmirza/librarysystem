@@ -15,7 +15,7 @@
         <div class="bg-green-50 p-6 rounded-lg border border-green-100 shadow-sm">
             <h3 class="text-xl font-bold text-green-700 mb-2">Borrow Requests</h3>
             <p class="text-gray-600 text-sm mb-4">Check student item requests and approvals.</p>
-            <a href="#" class="inline-block bg-green-600 text-white text-sm px-4 py-2 rounded hover:bg-green-700">View Requests</a>
+            <a href="/borrow-requests" class="inline-block bg-green-600 text-white text-sm px-4 py-2 rounded hover:bg-green-700">View Requests</a>
         </div>
 
         <div class="bg-amber-50 p-6 rounded-lg border border-amber-100 shadow-sm">

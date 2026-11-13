@@ -4,7 +4,7 @@ namespace Database\Seeders;
 
 use Illuminate\Database\Seeder;
 use App\Models\User;
-use App\Models\ItemCategory;
+use App\Models\Category;
 use App\Models\InventoryItem;
 use Illuminate\Support\Facades\Hash;
 
@@ -12,50 +12,46 @@ class DatabaseSeeder extends Seeder
 {
     public function run(): void
     {
-        
-        User::create([
-            'name' => 'Staff Admin',
-            'email' => 'staff@campus.edu',
-            'password' => Hash::make('password123'),
-        ]);
+        // 1. Users Banayein (Bina Duplicate Error Ke)
+        User::firstOrCreate(
+            ['email' => 'admin@gmail.com'],
+            [
+                'name' => 'Admin User',
+                'password' => Hash::make('password123'),
+                'role' => 'admin',
+            ]
+        );
 
-        User::create([
-            'name' => 'Ali Student',
-            'email' => 'student@campus.edu',
-            'password' => Hash::make('password123'),
-        ]);
+        User::firstOrCreate(
+            ['email' => 'student@gmail.com'],
+            [
+                'name' => 'Student User',
+                'password' => Hash::make('password123'),
+                'role' => 'student',
+            ]
+        );
 
-        
-        $cat1 = ItemCategory::create([
-            'name' => 'Laptops & Devices', 
-            'description' => 'Lab laptops and tablets for checkout'
-        ]);
-        
-        $cat2 = ItemCategory::create([
-            'name' => 'Lab Instruments', 
-            'description' => 'Oscilloscopes, Arduino kits and tools'
-        ]);
+        // 2. Categories Banayein
+        $cat1 = Category::firstOrCreate(['name' => 'Laptops']);
+        $cat2 = Category::firstOrCreate(['name' => 'Hardware Kits']);
 
-        
-        InventoryItem::create([
-            'category_id' => $cat1->id,
-            'name' => 'Dell Latitude Laptop #1',
-            'condition' => 'Good',
-            'is_available' => true,
-        ]);
+        // 3. Inventory Items Banayein
+        InventoryItem::firstOrCreate(
+            ['name' => 'Dell Latitude Laptop'],
+            [
+                'category_id' => $cat1->id,
+                'condition' => 'Good',
+                'is_available' => true,
+            ]
+        );
 
-        InventoryItem::create([
-            'category_id' => $cat2->id,
-            'name' => 'Arduino Starter Kit #1',
-            'condition' => 'Good',
-            'is_available' => true,
-        ]);
-
-        InventoryItem::create([
-            'category_id' => $cat2->id,
-            'name' => 'Digital Oscilloscope #1',
-            'condition' => 'Needs Repair',
-            'is_available' => false,
-        ]);
+        InventoryItem::firstOrCreate(
+            ['name' => 'Arduino Starter Kit'],
+            [
+                'category_id' => $cat2->id,
+                'condition' => 'Good',
+                'is_available' => true,
+            ]
+        );
     }
 }
